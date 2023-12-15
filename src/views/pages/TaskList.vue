@@ -68,26 +68,26 @@ export default {
     },
     methods: {
         fetchTaskList(page = 1) {
-    const config = {
-        headers: {
-            "Authorization": `Bearer ${this.token}`
-        },
-    };
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
+                },
+            };
 
-    axios.get(`https://task.electroniqueclasse.com/api/task?page=${page}`, config)
-        .then(response => {
-            // Check if response.data is not null or undefined before assigning
-            if (response.data) {
-                this.tasks = response.data;
-            } else {
-                this.tasks = [];
-            }
-        })
-        .catch(error => {
-            // Handle the error appropriately
-            console.error(error);
-        });
-},
+            axios.get(`https://task.electroniqueclasse.com/api/task?page=${page}`, config)
+                .then(response => {
+                    // Check if response.data is not null or undefined before assigning
+                    if (response.data) {
+                        this.tasks = response.data;
+                    } else {
+                        this.tasks = [];
+                    }
+                })
+                .catch(error => {
+                    // Handle the error appropriately
+                    console.error(error);
+                });
+        },
 
 
         handleDelete(id) {
@@ -101,7 +101,12 @@ export default {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`https://task.electroniqueclasse.com/api/task/${id}`)
+                    const config = {
+                        headers: {
+                            "Authorization": `Bearer ${this.token}`
+                        },
+                    };
+                    axios.delete(`https://task.electroniqueclasse.com/api/task/${id}`, config)
                         .then(response => {
                             Swal.fire({
                                 icon: 'success',
