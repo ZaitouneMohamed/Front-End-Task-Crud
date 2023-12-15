@@ -19,24 +19,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="project in projects" :key="project.id">
-                                <td>{{ project.title }}</td>
-                                <td>{{ project.description }}</td>
-                                <td>{{ project.status }}</td>
-                                <td>{{ project.date }}</td>
+                            <tr v-for="item in tasks.data" :key="item.id">
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.description }}</td>
+                                <td>{{ item.status }}</td>
+                                <td>{{ item.date }}</td>
                                 <td>
-                                    <router-link :to="`/show/${project.id}`"
+                                    <router-link :to="`/show/${item.id}`"
                                         class="btn btn-outline-info mx-1">Show</router-link>
-                                    <router-link :to="`/edit/${project.id}`"
+                                    <router-link :to="`/edit/${item.id}`"
                                         class="btn btn-outline-success mx-1">Edit</router-link>
-                                    <button @click="handleDelete(project.id)" className="btn btn-outline-danger mx-1">
+                                    <button @click="handleDelete(item.id)" className="btn btn-outline-danger mx-1">
                                         Delete
                                     </button>
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
+                    <Bootstrap5Pagination :data="tasks" @pagination-change-page="fetchTaskList" />
                 </div>
             </div>
         </div>
@@ -45,6 +45,7 @@
    
 <script>
 import axios from 'axios';
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import LayoutDiv from '../../components/Layouts.vue';
 import Swal from 'sweetalert2'
 
@@ -52,10 +53,11 @@ export default {
     name: 'TaskList',
     components: {
         LayoutDiv,
+        Bootstrap5Pagination
     },
     data() {
         return {
-            projects: [],
+            tasks: [],
             token: JSON.parse(localStorage.getItem('token'))
         };
     },
@@ -63,21 +65,29 @@ export default {
         this.fetchTaskList();
     },
     methods: {
-        fetchTaskList() {
-            const config = {
-                headers: {
-                    "Authorization": `Bearer ${this.token}`
-                },
-            };
-            axios.get('https://task.electroniqueclasse.com/api/task', config)
-                .then(response => {
-                    this.projects = response.data;
-                    return response
-                })
-                .catch(error => {
-                    return error
-                });
+        fetchTaskList(page = 1) {
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${this.token}`
         },
+    };
+
+    axios.get(`https://task.electroniqueclasse.com/api/task?page=${page}`, config)
+        .then(response => {
+            // Check if response.data is not null or undefined before assigning
+            if (response.data) {
+                this.tasks = response.data;
+            } else {
+                this.tasks = [];
+            }
+        })
+        .catch(error => {
+            // Handle the error appropriately
+            console.error(error);
+        });
+},
+
+
         handleDelete(id) {
             Swal.fire({
                 title: 'Are you sure?',
