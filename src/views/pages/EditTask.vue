@@ -11,17 +11,19 @@
           <div class="form-group">
             <label>Title</label>
             <input v-model="Task.title" type="text" class="form-control" />
-
+            <span class="text-danger" v-if="errors.title">{{ errors.title[0] }}</span>
           </div>
           <div class="form-group">
             <label htmlFor="description">Description</label>
             <textarea v-model="Task.description" class="form-control" rows="3"></textarea>
+            <span class="text-danger" v-if="errors.description">{{ errors.description[0] }}</span>
           </div>
           <div class="form-group">
             <label>Date</label>
             <input v-model="Task.date" type="date" class="form-control" />
+            <span class="text-danger" v-if="errors.date">{{ errors.date[0] }}</span>
           </div>
-          <button @click="handleSave()" :disabled="isSaving" type="button" class="btn btn-outline-primary mt-3">
+          <button @click="handleSave()" :disabled="disabled" type="button" class="btn btn-outline-primary mt-3">
             Save Task
           </button>
         </form>
@@ -47,7 +49,8 @@ export default {
         description: '',
         date: null,
       },
-      isSaving: false,
+      errors: {},
+      disabled: false,
     };
   },
   created() {
@@ -66,6 +69,15 @@ export default {
         return error
       })
   },
+  watch: {
+        Task: {
+            handler() {
+                this.errors = {};
+                this.disabled = false;
+            },
+            deep: true,
+        },
+    },
   methods: {
     handleSave() {
       this.isSaving = true
@@ -78,21 +90,15 @@ export default {
             showConfirmButton: false,
             timer: 1500
           })
-          this.isSaving = false
+          this.disabled = false
           this.Task.title = ""
           this.Task.date = ""
           this.Task.description = ""
           this.$router.push({ path: `/` });
         })
         .catch(error => {
-          this.isSaving = false
-          Swal.fire({
-            icon: 'error',
-            title: 'An Error Occured!',
-            showConfirmButton: false,
-            timer: 1500
-          })
-          return error
+          this.disabled = true
+          this.errors = error.response.data.errors;
         });
     },
   },
