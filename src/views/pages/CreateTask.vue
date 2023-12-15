@@ -7,22 +7,24 @@
                 </router-link>
             </div>
             <div class="card-body">
-                {{ Task }}
                 <form>
                     <div class="form-group">
                         <label>Title</label>
                         <input v-model="Task.title" type="text" class="form-control" />
-                        
+                        <span class="text-danger" v-if="errors.title">{{ errors.title[0] }}</span>
                     </div>
+                    <br>
                     <div class="form-group">
                         <label htmlFor="description">Description</label>
                         <textarea v-model="Task.description" class="form-control" rows="3"></textarea>
+                        <span class="text-danger" v-if="errors.description">{{ errors.description[0] }}</span>
                     </div>
                     <div class="form-group">
                         <label>Date</label>
                         <input v-model="Task.date" type="date" class="form-control" />
+                        <span class="text-danger" v-if="errors.date">{{ errors.date[0] }}</span>
                     </div>
-                    <button @click="handleSave()" :disabled="isSaving" type="button" class="btn btn-outline-primary mt-3">
+                    <button @click="handleSave()" :disabled="disabled" type="button" class="btn btn-outline-primary mt-3">
                         Save Task
                     </button>
                 </form>
@@ -32,9 +34,9 @@
 </template>
    
 <script>
+import LayoutDiv from '../../components/Layouts.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import LayoutDiv from '../../components/Layouts.vue';
 import Swal from 'sweetalert2'
 
 export default {
@@ -49,7 +51,8 @@ export default {
                 description: '',
                 date: null,
             },
-            isSaving: false,
+            errors: {},
+            disabled: false,
         };
     },
     methods: {
@@ -70,15 +73,19 @@ export default {
                     this.$router.push({ path: `/` });
                 })
                 .catch(error => {
-                    this.isSaving = false
-                    Swal.fire({
-                        icon: 'error',
-                        title: error,
-                        showConfirmButton: false,
-                        timer: 4500
-                    })
-                    return error
+                    this.disabled = true
+                    this.errors = error.response.data.errors;
                 });
+        },
+    },
+    watch: {
+        Task: {
+            handler() {
+                console.log("task change");
+                this.errors = {};
+                this.disabled = false;
+            },
+            deep: true,
         },
     },
 };
