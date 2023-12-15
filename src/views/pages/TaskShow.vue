@@ -34,16 +34,22 @@ export default {
         return {
             Task: {
                 title: '',
-                date : '',
+                date: '',
                 description: '',
                 status: '',
             },
             isSaving: false,
+            token: JSON.parse(localStorage.getItem('token'))
         };
     },
     created() {
         const id = this.$route.params.id;
-        axios.get(`https://task.electroniqueclasse.com/api/task/${id}`)
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${this.token}`
+            },
+        };
+        axios.get(`https://task.electroniqueclasse.com/api/task/${id}`, config)
             .then(response => {
                 this.Task = response.data
             })

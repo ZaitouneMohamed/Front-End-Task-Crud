@@ -55,7 +55,8 @@ export default {
     },
     data() {
         return {
-            projects: []
+            projects: [],
+            token: JSON.parse(localStorage.getItem('token'))
         };
     },
     created() {
@@ -63,7 +64,12 @@ export default {
     },
     methods: {
         fetchTaskList() {
-            axios.get('https://task.electroniqueclasse.com/api/task')
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
+                },
+            };
+            axios.get('https://task.electroniqueclasse.com/api/task', config)
                 .then(response => {
                     this.projects = response.data;
                     return response

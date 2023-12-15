@@ -50,12 +50,18 @@ export default {
         date: null,
       },
       errors: {},
+      token: JSON.parse(localStorage.getItem('token')),
       disabled: false,
     };
   },
   created() {
     const id = this.$route.params.id;
-    axios.get(`https://task.electroniqueclasse.com/api/task/${id}`)
+    const config = {
+      headers: {
+        "Authorization": `Bearer ${this.token}`
+      },
+    };
+    axios.get(`https://task.electroniqueclasse.com/api/task/${id}`, config)
       .then(response => {
         this.Task = response.data
       })
@@ -70,19 +76,24 @@ export default {
       })
   },
   watch: {
-        Task: {
-            handler() {
-                this.errors = {};
-                this.disabled = false;
-            },
-            deep: true,
-        },
+    Task: {
+      handler() {
+        this.errors = {};
+        this.disabled = false;
+      },
+      deep: true,
     },
+  },
   methods: {
     handleSave() {
       this.isSaving = true
       const id = this.$route.params.id;
-      axios.put(`https://task.electroniqueclasse.com/api/task/${id}`, this.Task)
+      const config = {
+        headers: {
+          "Authorization": `Bearer ${this.token}`
+        },
+      };
+      axios.put(`https://task.electroniqueclasse.com/api/task/${id}`, this.Task, config)
         .then(response => {
           Swal.fire({
             icon: 'success',

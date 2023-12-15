@@ -53,12 +53,18 @@ export default {
             },
             errors: {},
             disabled: false,
+            token: JSON.parse(localStorage.getItem('token'))
         };
     },
     methods: {
         handleSave() {
             this.isSaving = true
-            axios.post('https://task.electroniqueclasse.com/api/task', this.Task)
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
+                },
+            };
+            axios.post('https://task.electroniqueclasse.com/api/task', this.Task, config)
                 .then(response => {
                     Swal.fire({
                         icon: 'success',
