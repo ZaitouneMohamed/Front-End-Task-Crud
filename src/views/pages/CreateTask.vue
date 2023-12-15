@@ -81,7 +81,6 @@ export default {
     watch: {
         Task: {
             handler() {
-                console.log("task change");
                 this.errors = {};
                 this.disabled = false;
             },
