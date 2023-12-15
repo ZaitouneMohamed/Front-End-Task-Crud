@@ -14,6 +14,7 @@
                                 <th>title</th>
                                 <th>Description</th>
                                 <th>status</th>
+                                <th>added by</th>
                                 <th>date</th>
                                 <th width="240px">Action</th>
                             </tr>
@@ -23,6 +24,7 @@
                                 <td>{{ item.title }}</td>
                                 <td>{{ item.description }}</td>
                                 <td>{{ item.status }}</td>
+                                <td>{{ item.user.name }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>
                                     <router-link :to="`/show/${item.id}`"
