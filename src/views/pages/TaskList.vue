@@ -18,7 +18,6 @@
                                     <option value="1">Completed</option>
                                 </select>
                             </div>
-                            {{ filter }}
                         </div>
                     </div>
                     <div class="col-4">
@@ -45,13 +44,15 @@
                                 <td>{{ item.user.name }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>
-                                    <router-link :to="`/show/${item.id}`"
-                                        class="btn btn-outline-info mx-1">Show</router-link>
-                                    <router-link :to="`/edit/${item.id}`"
-                                        class="btn btn-outline-success mx-1">Edit</router-link>
-                                    <button @click="handleDelete(item.id)" className="btn btn-outline-danger mx-1">
-                                        Delete
-                                    </button>
+                                    <div v-if="item.is_owner">
+                                        <router-link :to="`/show/${item.id}`"
+                                            class="btn btn-outline-info mx-1">Show</router-link>
+                                        <router-link :to="`/edit/${item.id}`"
+                                            class="btn btn-outline-success mx-1">Edit</router-link>
+                                        <button @click="handleDelete(item.id)" className="btn btn-outline-danger mx-1">
+                                            Delete
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
