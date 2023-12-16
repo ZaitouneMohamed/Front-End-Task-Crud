@@ -42,10 +42,15 @@
                                 <td>{{ item.description }}</td>
                                 <td>
                                     <div v-if="item.status == 0">
-                                        <span class="badge bg-danger">Pending</span>
+                                        <button class="btn btn-danger" v-if="item.is_owner"
+                                            @click="SwitchTaskStatus(item.id)">Pending</button>
+                                        <span class="badge bg-danger" v-else>Pending</span>
                                     </div>
                                     <div v-else>
-                                        <span class="badge bg-success">Completed</span>
+                                        <button class="btn btn-success" v-if="item.is_owner"
+                                            @click="SwitchTaskStatus(item.id)">Completed
+                                        </button>
+                                        <span class="badge bg-success" v-else>Completed</span>
                                     </div>
                                 </td>
                                 <td>{{ item.user.name }}</td>
@@ -134,6 +139,27 @@ export default {
                     // Handle the error appropriately
                     console.error(error);
                 });
+        },
+
+        SwitchTaskStatus($task_id) {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
+                }
+            }
+            axios.put(`https://task.electroniqueclasse.com/api/SwitchTask/${$task_id}`, config)
+                .then(response => {
+                    this.fetchTaskList();
+                    return response
+                }).catch((err) => { console.log(err) })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An Error Occured!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                })
         },
 
         handleDelete(id) {
