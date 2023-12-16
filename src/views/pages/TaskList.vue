@@ -141,26 +141,30 @@ export default {
                 });
         },
 
-        SwitchTaskStatus($task_id) {
+        SwitchTaskStatus(task_id) {
             const config = {
                 headers: {
                     "Authorization": `Bearer ${this.token}`
                 }
-            }
-            axios.put(`https://task.electroniqueclasse.com/api/SwitchTask/${$task_id}`, config)
+            };
+            axios.put(`https://task.electroniqueclasse.com/api/SwitchTask/${task_id}`, {}, config)
                 .then(response => {
                     this.fetchTaskList();
-                    return response
-                }).catch((err) => { console.log(err) })
+                    return response;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
                 .catch(error => {
                     Swal.fire({
                         icon: 'error',
-                        title: 'An Error Occured!',
+                        title: 'An Error Occurred!',
                         showConfirmButton: false,
                         timer: 1500
-                    })
-                })
+                    });
+                });
         },
+
 
         handleDelete(id) {
             Swal.fire({
