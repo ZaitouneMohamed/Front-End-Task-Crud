@@ -17,7 +17,6 @@
                                     <option value="0">Pending</option>
                                     <option value="1">Completed</option>
                                 </select>
-                                {{ filter }}
                             </div>
                         </div>
                     </div>
