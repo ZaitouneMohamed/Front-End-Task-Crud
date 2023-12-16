@@ -3,9 +3,27 @@
         <div class="container">
             <h2 class="text-center mt-5 mb-3">Task List</h2>
             <div class="card">
-                <div class="card-header">
-                    <router-link to="/create" class="btn btn-outline-primary">Create New Task
-                    </router-link>
+                <div class="card-header row">
+                    <div class="col-4">
+                        <router-link to="/create" class="btn btn-outline-primary">Create New Task
+                        </router-link>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6">
+                                <select v-model="filter.status" id="" class="form-control">
+                                    <option value="">Filter By Status</option>
+                                    <option value="">All</option>
+                                    <option value="0">Pending</option>
+                                    <option value="1">Completed</option>
+                                </select>
+                            </div>
+                            {{ filter }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-danger">Log Out</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -60,11 +78,23 @@ export default {
     data() {
         return {
             tasks: [],
-            token: JSON.parse(localStorage.getItem('token'))
+            token: JSON.parse(localStorage.getItem('token')),
+            filter: {
+                status: '',
+            }
+
         };
     },
     created() {
         this.fetchTaskList();
+    },
+    watch: {
+        filter: {
+            handler() {
+                this.fetchTaskList();
+            },
+            deep: true,
+        },
     },
     methods: {
         fetchTaskList(page = 1) {
@@ -74,9 +104,18 @@ export default {
                 },
             };
 
-            axios.get(`https://task.electroniqueclasse.com/api/task?page=${page}`, config)
+            // Convert filter object to query string if there are filter parameters
+            const filterParams = Object.keys(this.filter)
+                .map(key => this.filter[key] !== '' ? `${key}=${this.filter[key]}` : '')
+                .filter(Boolean)
+                .join('&');
+
+            // Include filterParams in the URL if present
+            const apiUrl = filterParams ? `https://task.electroniqueclasse.com/api/task?page=${page}&${filterParams}` :
+                `https://task.electroniqueclasse.com/api/task?page=${page}`;
+
+            axios.get(apiUrl, config)
                 .then(response => {
-                    // Check if response.data is not null or undefined before assigning
                     if (response.data) {
                         this.tasks = response.data;
                     } else {
@@ -88,7 +127,6 @@ export default {
                     console.error(error);
                 });
         },
-
 
         handleDelete(id) {
             Swal.fire({
