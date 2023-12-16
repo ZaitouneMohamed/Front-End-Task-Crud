@@ -17,6 +17,7 @@
                                     <option value="0">Pending</option>
                                     <option value="1">Completed</option>
                                 </select>
+                                {{ filter }}
                             </div>
                         </div>
                     </div>
@@ -40,7 +41,14 @@
                             <tr v-for="item in tasks.data" :key="item.id">
                                 <td>{{ item.title }}</td>
                                 <td>{{ item.description }}</td>
-                                <td>{{ item.status }}</td>
+                                <td>
+                                    <div v-if="item.status == 0">
+                                        <span class="badge bg-danger">Pending</span>
+                                    </div>
+                                    <div v-else>
+                                        <span class="badge bg-success">Completed</span>
+                                    </div>
+                                </td>
                                 <td>{{ item.user.name }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>
