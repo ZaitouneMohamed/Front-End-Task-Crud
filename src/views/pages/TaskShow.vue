@@ -14,12 +14,19 @@
                 <b className="text-muted">date :</b>
                 <p>{{ Task.date }}</p>
                 <b className="text-muted">status :</b>
-                <p>{{ Task.status }}</p>
+                <p>
+                    <div v-if="Task.status == 0">
+                        <span class="badge bg-danger">Pending</span>
+                    </div>
+                    <div v-else>
+                        <span class="badge bg-success">Completed</span>
+                    </div>
+                </p>
             </div>
         </div>
     </layout-div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 import LayoutDiv from '../../components/Layouts.vue';
