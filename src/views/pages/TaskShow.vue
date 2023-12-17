@@ -6,22 +6,25 @@
                 <router-link class="btn btn-outline-info float-right" to="/">View All Tasks
                 </router-link>
             </div>
-            <div class="card-body">
+            <div class="card-body" v-if="Task.is_owner">
                 <b className="text-muted">Title :</b>
-                <p>{{ Task.title }}</p>
+                <p>{{ Task.task.title }}</p>
                 <b className="text-muted">Description :</b>
-                <p>{{ Task.description }}</p>
+                <p>{{ Task.task.description }}</p>
                 <b className="text-muted">date :</b>
-                <p>{{ Task.date }}</p>
+                <p>{{ Task.task.date }}</p>
                 <b className="text-muted">status :</b>
                 <p>
-                    <div v-if="Task.status == 0">
+                    <div v-if="Task.task.status == 0">
                         <span class="badge bg-danger">Pending</span>
                     </div>
                     <div v-else>
                         <span class="badge bg-success">Completed</span>
                     </div>
                 </p>
+            </div>
+            <div class="card-body" v-else>
+                <h1 className="text-center">This Task Is Not Your</h1>
             </div>
         </div>
     </layout-div>
