@@ -66,7 +66,7 @@ methods: {
                 localStorage.setItem('token',JSON.stringify(response.data.token)),
                 Swal.fire({
                     icon: 'success',
-                    title: 'Task Create With Success',
+                    title: 'Welcome',
                     showConfirmButton: false,
                     timer: 1500
                 })
