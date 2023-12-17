@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-danger">Log Out</button>
+                        <button class="btn btn-danger" @click="UserLogOut()">Log Out</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -165,6 +165,22 @@ export default {
                 });
         },
 
+        UserLogOut() {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${this.token}`
+                }
+            };
+            axios.post('https://task.electroniqueclasse.com/api/logout', {}, config)
+                .then(response => {
+                    localStorage.removeItem('token');
+                    this.$router.push('/login');
+                    return response;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
 
         handleDelete(id) {
             Swal.fire({
